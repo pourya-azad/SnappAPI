@@ -1,66 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+**SnappAPI – سیستم درخواست سفر آنلاین 🚖**  
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+پروژه‌ی **SnappAPI** یک **سیستم درخواست تاکسی آنلاین** است که با استفاده از **Laravel 12** توسعه داده شده است. این پروژه شامل ویژگی‌هایی مانند **جستجوی راننده‌های نزدیک، ارسال درخواست سفر، تأیید هزینه، نمایش اطلاعات راننده و مدیریت وضعیت سفر** است.  
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 📌 **عملکرد کلی پروژه**  
+۱. **کاربر درخواست سفر ارسال می‌کند**  
+۲. سیستم **نزدیک‌ترین رانندگان آزاد** را پیدا می‌کند  
+3. راننده می‌تواند **درخواست سفر را بپذیرد یا رد کند**  
+4. در صورت تأیید، **نام راننده و هزینه سفر به کاربر نمایش داده می‌شود**  
+5. **راننده پس از تأیید، وضعیت خود را به "مشغول" تغییر می‌دهد**  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🔥 **تکنولوژی‌های استفاده‌شده**  
+- **Laravel 11** 🚀 (بک‌اند اصلی)  
+- **Laravel Sanctum** 🔐 (احراز هویت کاربران و رانندگان)  
+- **Redis** ⚡ (کشینگ و بهینه‌سازی عملکرد)  
+- **WebSocket** 📡 (ارتباط زنده بین کاربران و رانندگان)  
+- **MySQL** 🛢 (پایگاه داده اصلی)  
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🔧 نصب و راه‌اندازی  
+۱. پروژه رو کلون کن:  
+```bash
+git clone https://github.com/yourusername/snappapi.git
+cd snappapi
+```
+۲. وابستگی‌ها رو نصب کن:  
+```bash
+composer install
+npm install
+```
+۳. فایل **.env** رو تنظیم کن و اطلاعات دیتابیس رو وارد کن:  
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+۴. دیتابیس رو مهاجرت بده:  
+```bash
+php artisan migrate --seed
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+5. پروژه رو اجرا کن:  
+```bash
+php artisan serve
+```
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🛠 **ویژگی‌های کلیدی**  
+✅ **یافتن نزدیک‌ترین راننده** با استفاده از **الگوریتم آدرس‌یابی**  
+✅ **پشتیبانی از WebSocket** برای ارتباط **بلادرنگ بین راننده و مسافر**  
+✅ **مدیریت درخواست سفر** از طریق **API**  
+✅ **بهینه‌سازی کوئری‌ها** با **Redis**  
+✅ **امنیت بالا** با **Laravel Sanctum** برای احراز هویت کاربران  
 
-## Laravel Sponsors
+📌 این پروژه به‌عنوان یک کلون از **Snapp / Uber** طراحی شده و قابلیت گسترش و شخصی‌سازی دارد.  
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+### 👨‍💻 **توسعه‌دهنده**  
+[**Pouria Azad**](https://www.linkedin.com/in/pouria-azad)  
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+🚀 **اگر سوالی داشتی یا می‌خوای پروژه رو بهبود بدی، مشارکت در گیت‌هاب آزاد است!** 😎
