@@ -1,0 +1,108 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Http\Controllers\RideController;
+use App\Http\Requests\CompleteRideRequest;
+use App\Services\RideCompletionService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Mockery;
+use Mockery\MockInterface;
+use Tests\TestCase;
+
+class RideControllerTest extends TestCase
+{
+    protected $rideCompletionService;
+
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // ایجاد Mock برای RideCompletionService
+        $this->rideCompletionService = $this->mock(RideCompletionService::class);
+
+        // جایگذاری Mock در سیستم لاراول
+        $this->app->instance(RideCompletionService::class, $this->rideCompletionService);
+    }
+
+    public function test_complete_ride_successfully()
+    {
+        // داده‌ی ساختگی برای پاسخ
+        $fakeData = ['total_time' => 2];
+
+        // شبیه‌سازی درخواست
+        $request = new CompleteRideRequest([
+            "driver_id" => 1,
+            "trip_id" => 2,
+        ]);
+
+        // تنظیم رفتار Mock برای سرویس
+        $this->rideCompletionService
+            ->shouldReceive('completeRide')
+            ->with(2) // مقدار trip_id که به متد می‌فرستیم
+            ->once()
+            ->andReturn($fakeData);
+
+        // ایجاد کنترلر با سرویس mock شده
+        $controller = app(RideController::class);
+        $response = $controller->complete($request);
+
+        // بررسی پاسخ
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                'message' => 'Ride completed successfully',
+                'data' => $fakeData,
+            ]),
+            $response->getContent()
+        );
+    }
+
+    public function test_complete_ride_fails_with_exception()
+    {
+        // شبیه‌سازی درخواست
+        $request = new CompleteRideRequest([
+            "driver_id" => 1,
+            "trip_id" => 2,
+        ]);
+
+        // تنظیم رفتار Mock برای پرتاب استثنا
+        $this->rideCompletionService
+            ->shouldReceive('completeRide')
+            ->with(2)
+            ->once()
+            ->andThrow(new \Exception('Something went wrong'));
+
+        // تنظیم Log برای بررسی لاگ‌گذاری
+        \Log::shouldReceive('error')
+            ->once()
+            ->with('Failed to complete ride', Mockery::on(function ($context) {
+                return isset($context['error']) && $context['error'] === 'Something went wrong'
+                    && $context['trip_id'] === 2;
+            }));
+
+        // ایجاد کنترلر با سرویس Mock شده
+        $controller = app(RideController::class);
+        $response = $controller->complete($request);
+
+        // بررسی پاسخ
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                'message' => 'Failed to complete ride',
+                'error' => 'Something went wrong',
+            ]),
+            $response->getContent()
+        );
+    }
+
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+}
