@@ -38,14 +38,21 @@ npm install
 cp .env.example .env
 php artisan key:generate
 ```
-۴. دیتابیس رو مهاجرت بده:  
+۴. دیتابیس رو migrate کن:  
 ```bash
 php artisan migrate --seed
 ```
+5. اجرای Redis برای بهینه‌سازی سرعت:
 
-5. پروژه رو اجرا کن:  
+```bash
+redis-server
+```
+
+6. پروژه رو اجرا کن:  
 ```bash
 php artisan serve
+php artisan reverb:start
+php artisan queue:work
 ```
 ---
 
