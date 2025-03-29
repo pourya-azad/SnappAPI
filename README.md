@@ -29,8 +29,8 @@
 ### 🔧 نصب و راه‌اندازی  
 ۱. پروژه رو کلون کن:  
 ```bash
-git clone https://github.com/yourusername/snappapi.git
-cd snappapi
+git clone git@github.com:pouria-azad/SnappAPI.git
+cd SnappAPI
 ```
 ۲. وابستگی‌ها رو نصب کن:  
 ```bash
