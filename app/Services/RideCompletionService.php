@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class RideCompletionService implements RideCompletionServiceInterface
 {
 
-    public function completeRide(int $tripId): array
+    public function completeRide(int $tripId): float
     {
         $currentRide = CurrentRide::findOrFail($tripId);
         $totalTimeInHours = Carbon::now()->diffInHours($currentRide->created_at);
@@ -28,6 +28,6 @@ class RideCompletionService implements RideCompletionServiceInterface
             'total_time' => $totalTimeInHours,
         ]);
 
-        return ['total_time' => $totalTimeInHours];
+        return $totalTimeInHours;
     }
 }

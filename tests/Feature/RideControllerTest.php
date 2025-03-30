@@ -30,7 +30,7 @@ class RideControllerTest extends TestCase
     public function test_complete_ride_successfully()
     {
         // داده‌ی ساختگی برای پاسخ
-        $fakeData = ['total_time' => 2];
+        $fakeTotalTime = 3;
 
         // شبیه‌سازی درخواست
         $request = new CompleteRideRequest([
@@ -43,7 +43,7 @@ class RideControllerTest extends TestCase
             ->shouldReceive('completeRide')
             ->with(2) // مقدار trip_id که به متد می‌فرستیم
             ->once()
-            ->andReturn($fakeData);
+            ->andReturn($fakeTotalTime);
 
         // ایجاد کنترلر با سرویس mock شده
         $controller = app(RideController::class);
@@ -55,7 +55,9 @@ class RideControllerTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
             json_encode([
                 'message' => 'Ride completed successfully',
-                'data' => $fakeData,
+                'data' => [
+                    'total_time' => $fakeTotalTime
+                ],
             ]),
             $response->getContent()
         );

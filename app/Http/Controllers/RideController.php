@@ -25,11 +25,13 @@ class RideController extends Controller implements TripInterface
     public function complete(CompleteRideRequest $request): JsonResponse
     {
         try {
-            $data = $this->rideCompletionService->completeRide($request->trip_id);
+            $total_time = $this->rideCompletionService->completeRide($request->trip_id);
             
             return response()->json([
                 'message' => 'Ride completed successfully',
-                'data' => $data,
+                'data' => [
+                    'total_time' => $total_time
+                ],
             ], 201);
         } catch (\Exception $e) {
             \Log::error('Failed to complete ride', [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\UpdateLocationDriverRequest;
+use App\Http\Resources\DriverLocationResource;
 use App\Interfaces\Controllers\DriverInterface;
 use App\Models\Driver;
 use Illuminate\Http\JsonResponse;
@@ -28,14 +29,16 @@ class DriverController extends Controller implements DriverInterface
 
             \Log::info('Driver location updated successfully: ', [$driverId]);
 
-            return response()->json([
-                'message' => 'Driver location updated successfully in Redis',
-                'data' => [
-                    'driver_id' => $driverId,
-                    'location' => $locationData,
-                    'updated_at' => now()->toIso8601String(),
-                ],
-            ], 200);
+            $responseData = [
+                'driver_id' => $driverId,
+                'location' => $locationData,
+                'updated_at' => now()->toIso8601String(),
+            ];
+    
+            return (new DriverLocationResource($responseData))
+                ->additional(['message' => 'Driver location updated successfully in Redis'])
+                ->response()
+                ->setStatusCode(200);
         }
         catch (\Exception $e) {
             \Log::error('Failed to update driver location: ', [$e->getMessage()]);
