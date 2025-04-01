@@ -28,23 +28,19 @@ class StatusDriverControllerTest extends TestCase
      */
     public function test_status_when_driver_is_heading_to_user(): void
     {
-        // ایجاد راننده و احراز هویتش
         $driver = Driver::factory()->create();
         $this->actingAs($driver, 'driver');
 
-        // ایجاد یک کاربر و یک درخواست مرتبط
         $user = User::factory()->create();
-        $rideRequest = RideRequest::factory()->create(); // ساخت درخواست
+        $rideRequest = RideRequest::factory()->create();
 
-        // ایجاد یک سفر با isArrived = false و request_id معتبر
         CurrentRide::factory()->create([
             'driver_id' => $driver->id,
             'user_id' => $user->id,
-            'request_id' => $rideRequest->id, // استفاده از request_id معتبر
+            'request_id' => $rideRequest->id,
             'isArrived' => false,
         ]);
 
-        // ایجاد درخواست و فراخوانی متد
         $request = Request::create('/api/driver/status', 'GET');
         $request->setUserResolver(function () use ($driver) {
             return $driver;
@@ -53,7 +49,6 @@ class StatusDriverControllerTest extends TestCase
         $controller = app(DriverController::class);
         $response = $controller->status($request);
 
-        // بررسی پاسخ
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString(
@@ -69,23 +64,19 @@ class StatusDriverControllerTest extends TestCase
      */
     public function test_status_when_driver_is_on_ride(): void
     {
-        // ایجاد راننده و احراز هویتش
         $driver = Driver::factory()->create();
         $this->actingAs($driver, 'driver');
 
-        // ایجاد یک کاربر و یک درخواست مرتبط
         $user = User::factory()->create();
-        $rideRequest = RideRequest::factory()->create(); // ساخت درخواست
+        $rideRequest = RideRequest::factory()->create();
 
-        // ایجاد یک سفر با isArrived = true و request_id معتبر
         CurrentRide::factory()->create([
             'driver_id' => $driver->id,
             'user_id' => $user->id,
-            'request_id' => $rideRequest->id, // استفاده از request_id معتبر
+            'request_id' => $rideRequest->id,
             'isArrived' => true,
         ]);
 
-        // ایجاد درخواست و فراخوانی متد
         $request = Request::create('/api/driver/status', 'GET');
         $request->setUserResolver(function () use ($driver) {
             return $driver;
@@ -94,7 +85,6 @@ class StatusDriverControllerTest extends TestCase
         $controller = app(DriverController::class);
         $response = $controller->status($request);
 
-        // بررسی پاسخ
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString(
@@ -110,13 +100,9 @@ class StatusDriverControllerTest extends TestCase
      */
     public function test_status_when_driver_is_idle(): void
     {
-        // ایجاد راننده و احراز هویتش
         $driver = Driver::factory()->create();
         $this->actingAs($driver, 'driver');
 
-        // هیچ سفری برای راننده ایجاد نمی‌کنیم تا بیکار باشه
-
-        // ایجاد درخواست و فراخوانی متد
         $request = Request::create('/api/driver/status', 'GET');
         $request->setUserResolver(function () use ($driver) {
             return $driver;
@@ -125,7 +111,6 @@ class StatusDriverControllerTest extends TestCase
         $controller = app(DriverController::class);
         $response = $controller->status($request);
 
-        // بررسی پاسخ
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString(
@@ -141,12 +126,10 @@ class StatusDriverControllerTest extends TestCase
      */
     public function test_status_fails_when_driver_is_not_authenticated(): void
     {
-        // درخواست بدون احراز هویت
         $request = Request::create('/api/driver/status', 'GET');
 
         $controller = app(DriverController::class);
 
-        // بررسی اینکه متد به درستی کار نکنه
         try {
             $response = $controller->status($request);
             $this->fail('Expected an exception due to unauthenticated driver, but none was thrown.');

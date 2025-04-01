@@ -23,7 +23,6 @@ class DriverControllerTest extends TestCase
      */
     public function test_update_location_successfully(): void
     {
-        // ایجاد راننده و احراز هویتش
         $driver = Driver::factory()->create();
         $this->actingAs($driver, 'driver');
 
@@ -34,23 +33,19 @@ class DriverControllerTest extends TestCase
 
         $validatedData = array_merge($locationData, ['driver_id' => $driver->id]);
 
-        // ماک Redis
         Redis::shouldReceive('setex')
             ->once()
             ->with("driver:location:{$driver->id}", 3600, json_encode($validatedData));
 
-        // ماک لاگ موفقیت
         \Log::shouldReceive('info')
             ->once()
             ->with('Driver location updated successfully: ', [$driver->id]);
 
-        // درخواست
         $response = $this->postJson('/api/drivers/location', $locationData);
 
-        // بررسی پاسخ
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'data' => [ // اضافه کردن 'data' چون DriverLocationResource احتمالاً این ساختار رو داره
+                'data' => [
                     'driver_id',
                     'location' => ['latitude', 'longitude'],
                     'updated_at',
@@ -116,13 +111,11 @@ class DriverControllerTest extends TestCase
 
         $validatedData = array_merge($locationData, ['driver_id' => $driver->id]);
 
-        // ماک Redis با خطا
         Redis::shouldReceive('setex')
             ->once()
             ->with("driver:location:{$driver->id}", 3600, json_encode($validatedData))
             ->andThrow(new \RedisException('Redis connection failed'));
 
-        // ماک لاگ خطا با پیام و آرگومان دقیق
         \Log::shouldReceive('error')
             ->once()
             ->with('Failed to update driver location: ', ['Redis connection failed']);

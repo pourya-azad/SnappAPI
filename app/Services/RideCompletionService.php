@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Interfaces\Services\RideCompletionServiceInterface;
 use App\Models\CompleteRide;
 use App\Models\CurrentRide;
+use App\Models\Driver;
 use Carbon\Carbon;
 
 class RideCompletionService implements RideCompletionServiceInterface
@@ -20,6 +21,8 @@ class RideCompletionService implements RideCompletionServiceInterface
             ->put('total_time', $totalTimeInHours)
             ->except(['updated_at', 'created_at'])
             ->all();
+
+        Driver::findOrFail($currentRide['driver_id'])->update(['is_active' => true]);
 
         CompleteRide::create($rideData);
         $currentRide->delete();

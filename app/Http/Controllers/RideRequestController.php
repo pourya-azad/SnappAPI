@@ -8,6 +8,7 @@ use App\Http\Requests\AcceptRideRequestRequest;
 use App\Http\Requests\NewRideRequestRequest;
 use App\Interfaces\Controllers\RideRequestInterface;
 use App\Models\CurrentRide;
+use App\Models\Driver;
 use App\Models\RideRequest;
 use App\Services\RidePreparationService;
 use Illuminate\Http\JsonResponse;
@@ -91,16 +92,16 @@ class RideRequestController extends Controller implements RideRequestInterface
     public function store(NewRideRequestRequest $request): JsonResponse
     {
         try {
-            
+
             $trip = $this->ridePreparationService->calculateTripCost($request['pickup_latitude'], $request['pickup_longitude'], $request['dest_latitude'], $request['dest_longitude']);
-            
+
             $validatedData = collect($request->validated())
             ->put('user_id', $request->user('user')->id)
             ->put('cost', $trip['cost'])
             ->put('distance_km', $trip['distance_km'])
             ->all();
-            
-            
+
+
             if (RideRequest::where('user_id', $validatedData['user_id'])->where('isPending', true)->exists()) {
                 return response()->json([
                     'message' => "You already have a pending request!",
@@ -113,8 +114,8 @@ class RideRequestController extends Controller implements RideRequestInterface
                 ], 400);
             }
 
-            $rideRequest = RideRequest::create($validatedData);      
-            
+            $rideRequest = RideRequest::create($validatedData);
+
             \Log::info('Ride request created successfully', [
                 'request_id' => $rideRequest->id,
                 'user_id' => $request->user('user')->id ?? null,
@@ -129,7 +130,7 @@ class RideRequestController extends Controller implements RideRequestInterface
                 'data' => $rideRequest->only(['id', 'user_id', 'cost', 'distance_km']),
             ], 201);
         } catch(\Exception $e){
-            
+
             \Log::error('Failed to create ride request', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -141,7 +142,7 @@ class RideRequestController extends Controller implements RideRequestInterface
                 'error' => config('app.debug') ? $e->getMessage() : null,
             ], 500);
         }
-        
+
     }
 
 
@@ -213,7 +214,7 @@ class RideRequestController extends Controller implements RideRequestInterface
             ->put('driver_id', $request->user('driver')->id)
             ->put('user_id', RideRequest::findOrFail($request->request_id)->select('user_id')->first()->user_id ?? null)
             ->all();
-            
+
             // Check if the request is already accepted
             if (CurrentRide::where('request_id', $validatedData['request_id'])->exists()) {
                 return response()->json([
@@ -229,8 +230,10 @@ class RideRequestController extends Controller implements RideRequestInterface
             }
 
             // Update the ride request status
-            $rideRequest = RideRequest::where('id', $validatedData['request_id'])->firstOrFail();
-            $rideRequest->update(['isPending' => false]);
+            RideRequest::findOrFail($validatedData['request_id'])->update(['isPending' => false]);
+
+            // Update driver id status
+            Driver::findOrFail($validatedData['driver_id'])->update(['is_active' => false]);
 
             // Create a new current ride
             $currentRide = CurrentRide::create($validatedData);

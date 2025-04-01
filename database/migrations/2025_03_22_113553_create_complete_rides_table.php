@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreign('driver_id')->references('id')->on('drivers')->cascadeOnDelete();
             $table->unsignedBigInteger('request_id')->unique();
             $table->foreign('request_id')->references('id')->on('ride_requests')->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->unsignedInteger('star')->nullable();
 
         });

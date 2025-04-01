@@ -20,11 +20,10 @@ class StoreRideRequestControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Event::fake(); // Fake events for testing
+        Event::fake();
     }
     public function it_successfully_creates_ride_request()
     {
-        // Arrange
         $user = User::factory()->create();
         $requestData = [
             'pickup_latitude' => 35.6892,
@@ -32,15 +31,13 @@ class StoreRideRequestControllerTest extends TestCase
             'dest_latitude' => 35.6892,
             'dest_longitude' => 51.3890,
         ];
-    
-        // ایجاد Mock برای NewRideRequestRequest
+
         $mockRequest = $this->mock(NewRideRequestRequest::class, function ($mock) use ($requestData, $user) {
             $mock->shouldReceive('validated')->andReturn($requestData);
             $mock->shouldReceive('user')->andReturn($user);
             $mock->shouldReceive('all')->andReturn($requestData);
         });
     
-        // Mock کردن Log
         \Log::shouldReceive('info')
             ->once()
             ->withArgs(function ($message, $context) use ($user, $requestData) {
@@ -51,13 +48,11 @@ class StoreRideRequestControllerTest extends TestCase
             });
     
         \Log::shouldReceive('error')
-            ->never();  // چون این تست برای موفقیت است، نباید خطا ثبت شود.
+            ->never();
     
-        // Act
         $controller = new RideRequestController();
         $response = $controller->store($mockRequest);
-    
-        // Assert
+
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(201, $response->getStatusCode());
         
@@ -65,8 +60,7 @@ class StoreRideRequestControllerTest extends TestCase
         $this->assertEquals('Ride request created successfully', $responseData['message']);
         $this->assertArrayHasKey('request_id', $responseData);
         $this->assertEquals(['id', 'user_id'], array_keys($responseData['data']));
-    
-        // بررسی وارد شدن داده‌ها به دیتابیس
+
         $this->assertDatabaseHas('ride_requests', [
             'user_id' => $user->id, 
             'pickup_latitude' => 35.6892,
@@ -82,7 +76,6 @@ class StoreRideRequestControllerTest extends TestCase
     
     public function it_handles_creation_failure_and_logs_error()
     {
-        // Arrange
         $user = User::factory()->create();
         $requestData = [
             'pickup_latitude' => 35.6892,
@@ -90,15 +83,13 @@ class StoreRideRequestControllerTest extends TestCase
             'dest_latitude' => 35.6892,
             'dest_longitude' => 51.3890,
         ];
-    
-        // ایجاد Mock برای NewRideRequestRequest
+
         $mockRequest = $this->mock(NewRideRequestRequest::class, function ($mock) use ($requestData, $user) {
             $mock->shouldReceive('validated')->andReturn($requestData);
             $mock->shouldReceive('user')->andReturn($user);
             $mock->shouldReceive('all')->andReturn($requestData);
         });
-    
-        // Force an exception by mocking the RideRequest model
+
         RideRequest::shouldReceive('create')
             ->with($requestData)
             ->andThrow(new \Exception('Database error'));
@@ -111,26 +102,22 @@ class StoreRideRequestControllerTest extends TestCase
                     is_string($context['trace']) &&
                     $context['data'] === $requestData;
             });
-    
-        // Act
+
         $controller = new RideRequestController();
         $response = $controller->store($mockRequest);
-    
-        // Assert
+
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(500, $response->getStatusCode());
     
         $responseData = json_decode($response->getContent(), true);
         $this->assertEquals('An error occurred while creating the ride request', $responseData['message']);
-    
-        // Check debug mode behavior
+
         if (config('app.debug')) {
             $this->assertEquals('Database error', $responseData['error']);
         } else {
             $this->assertNull($responseData['error']);
         }
-    
-        // Ensure the ride request was not created in the database
+
         $this->assertDatabaseMissing('ride_requests', [
             'pickup_latitude' => 35.6892,
             'pickup_longitude' => 51.3890,
