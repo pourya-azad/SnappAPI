@@ -3,23 +3,31 @@
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\RideController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\Driver\AuthController as DriverAuthController;
+use App\Http\Controllers\Auth\User\AuthController as UserAuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::group(["prefix"=> "users"], function () {
+    Route::get('status', [UserController::class, 'status'])->middleware('auth:sanctum,user');
 
-Route::resource('drivers',DriverController::class);
-Route::post('drivers/location', [DriverController::class,'updateLocation']);
+    Route::post('login', [UserAuthController::class,'login']);
 
-Route::post('riderequest/store', [RideRequestController::class, 'store']);
+    Route::post('logout', [UserAuthController::class,'logout'])->middleware('auth:sanctum,user');
+});
 
-Route::post('login', [AuthController::class,'login']);
+Route::group(['prefix'=> 'drivers'], function () {
+    Route::post('/location', [DriverController::class,'updateLocation'])->middleware('auth:sanctum,driver');
 
-Route::middleware('auth:sanctum')->post('logout', [AuthController::class,'logout']);
+    Route::post('login', [DriverAuthController::class,'login']);
 
-Route::post('riderequest/accept', [RideRequestController::class,'accept']);
+    Route::post('logout', [DriverAuthController::class,'logout'])->middleware('auth:sanctum,driver');
+});
 
-Route::post('ride/complete', [RideController::class,'complete']);
+Route::group(['prefix'=> 'ride-requests'], function () {
+    Route::post('store', [RideRequestController::class, 'store'])->middleware('auth:sanctum,user');
+
+    Route::post('accept', [RideRequestController::class,'accept'])->middleware('auth:sanctum,driver');
+});
+
+Route::post('ride/complete', [RideController::class,'complete'])->middleware('auth:sanctum,driver');

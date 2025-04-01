@@ -4,10 +4,9 @@ namespace App\Listeners;
 
 use App\Events\RideRequestBroadcast;
 use App\Events\RideRequestCreated;
+use App\Models\ReqestDriver;
+use App\Models\RequestDriver;
 use App\Services\RidePreparationService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
 
 class ProcessUserRideRequest
 {
@@ -32,15 +31,12 @@ class ProcessUserRideRequest
         foreach( $nearbyDrivers as $nearbyDriver ) 
         {   
             $driverIds->push($nearbyDriver->id);
+            RequestDriver::create(['request_id' => $event->rideRequest->id, 'driver_id' => $nearbyDriver->id, ]);
         }
 
-
-        $res = [];
-        $res = $this->RidePreparationService->calculateTripCost($event->rideRequest->pickup_latitude, $event->rideRequest->pickup_longitude, $event->rideRequest->dest_latitude, $event->rideRequest->dest_longitude);
+        $tripCost = $event->rideRequest->cost;
         
-
-
-        event( new RideRequestBroadcast($event->rideRequest->id ,$event->rideRequest->pickup_latitude, $event->rideRequest->pickup_longitude, $driverIds->all()));
+        event( new RideRequestBroadcast($event->rideRequest->id ,$event->rideRequest->pickup_latitude, $event->rideRequest->pickup_longitude, $driverIds->all(),  $tripCost));
 
     }
 }

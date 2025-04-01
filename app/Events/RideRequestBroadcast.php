@@ -4,8 +4,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -18,16 +16,18 @@ class RideRequestBroadcast implements ShouldBroadcast
     public $pickup_latitude;
     public $pickup_longitude;
     public $driverIds;
+    public $tripCost;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($requestId, $pickup_latitude, $pickup_longitude, $driverIds)
+    public function __construct($requestId, $pickup_latitude, $pickup_longitude, $driverIds, $tripCost)
     {
         $this->requestId = $requestId;
         $this->pickup_latitude = $pickup_latitude;
         $this->pickup_longitude = $pickup_longitude;
         $this->driverIds = $driverIds;
+        $this->tripCost = $tripCost;
     }
 
     /**
@@ -47,6 +47,7 @@ class RideRequestBroadcast implements ShouldBroadcast
             'driverIds' => $this->driverIds,
             'pickup_latitude' => $this->pickup_latitude,
             'pickup_longitude'=> $this->pickup_longitude,
+            'trip_cost' => $this->tripCost
         ];
     }
 }

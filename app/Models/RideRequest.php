@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RideRequest extends Model
 {
@@ -19,4 +21,9 @@ class RideRequest extends Model
         'dest_latitude' => 'float',
         'dest_longitude' => 'float',
     ];
+
+    public function CurrentRide(): BelongsTo
+    {
+        return $this->belongsTo(CurrentRide::class,'id','request_id');
+    }
 }

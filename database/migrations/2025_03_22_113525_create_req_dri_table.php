@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('req_dri', function (Blueprint $table) {
+        Schema::create('request_driver', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('request_id');
             $table->unsignedBigInteger('driver_id');

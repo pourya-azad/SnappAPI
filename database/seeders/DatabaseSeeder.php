@@ -6,6 +6,7 @@ use App\Models\Driver;
 use App\Models\RideRequest;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,7 +18,10 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
         Driver::factory(10)->create();
+        RideRequest::factory(10)->create();
         
+        User::factory(['email' => 'user@example.com', 'password'=> Hash::make('password123')])->create();
+        Driver::factory(["email" => "driver@example.com" ,'password'=> Hash::make('password123')])->create();
 
 
     }

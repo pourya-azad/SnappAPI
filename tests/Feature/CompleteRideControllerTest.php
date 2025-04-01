@@ -11,10 +11,9 @@ use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
-class RideControllerTest extends TestCase
+class CompleteRideControllerTest extends TestCase
 {
     protected $rideCompletionService;
-
 
     protected function setUp(): void
     {
@@ -78,10 +77,10 @@ class RideControllerTest extends TestCase
             ->once()
             ->andThrow(new \Exception('Something went wrong'));
 
-        // تنظیم Log برای بررسی لاگ‌گذاری
+        // تنظیم Log برای بررسی لاگ‌گذاری با پیام و آرگومان‌های دقیق
         \Log::shouldReceive('error')
             ->once()
-            ->with('Failed to complete ride', Mockery::on(function ($context) {
+            ->with('An error occurred while completing the ride: ', Mockery::on(function ($context) {
                 return isset($context['error']) && $context['error'] === 'Something went wrong'
                     && $context['trip_id'] === 2;
             }));
@@ -95,14 +94,14 @@ class RideControllerTest extends TestCase
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString(
             json_encode([
-                'message' => 'Failed to complete ride',
-                'error' => 'Something went wrong',
+                'message' => 'An error occurred while completing the ride',
+                'error' => config('app.debug') ? 'Something went wrong' : null,
             ]),
             $response->getContent()
         );
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();

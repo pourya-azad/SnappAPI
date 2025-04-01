@@ -22,6 +22,7 @@ class RideCompletionService implements RideCompletionServiceInterface
             ->all();
 
         CompleteRide::create($rideData);
+        $currentRide->delete();
 
         \Log::info('Ride completed successfully', [
             'trip_id' => $tripId,

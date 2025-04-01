@@ -22,7 +22,6 @@ class CompleteRideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "driver_id"=> "required|integer",
             "trip_id" => "required|exists:current_rides,id"
         ];
     }

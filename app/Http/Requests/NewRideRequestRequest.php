@@ -26,7 +26,6 @@ class NewRideRequestRequest extends FormRequest
             'pickup_longitude'=> 'required|numeric',
             'dest_latitude'=> 'required|numeric',
             'dest_longitude'=> 'required|numeric',
-            'user_id'=> 'required|exists:users,id',
         ];
     }
 }

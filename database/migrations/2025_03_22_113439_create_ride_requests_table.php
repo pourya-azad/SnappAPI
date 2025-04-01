@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('dest_longitude', 10, 6);
             $table->unsignedBigInteger('user_id');
             $table->boolean('isPending')->default(true);
+            $table->unsignedBigInteger('cost');
+            $table->unsignedBigInteger('distance_km');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
             

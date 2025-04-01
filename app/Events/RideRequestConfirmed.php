@@ -18,14 +18,16 @@ class RideRequestConfirmed implements ShouldBroadcast
     public $driverIds;
     public $userId;
     public $service;
+    public $tripCost;
     
     /**
      * Create a new event instance.
      */
-    public function __construct(int $driverIds,int $userId)
+    public function __construct(int $driverIds,int $userId, $tripCost)
     {
         $this->driverIds = $driverIds;
         $this->userId = $userId;
+        $this->tripCost = $tripCost;
     }
 
     /**

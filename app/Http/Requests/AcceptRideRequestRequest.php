@@ -22,7 +22,6 @@ class AcceptRideRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'driver_id'=> 'required|exists:drivers,id',
             'request_id' => 'required|exists:ride_requests,id'
         ];
     }

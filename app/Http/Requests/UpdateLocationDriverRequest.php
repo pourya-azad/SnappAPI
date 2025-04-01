@@ -22,7 +22,6 @@ class UpdateLocationDriverRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'driver_id'=> 'required|exists:drivers,id',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ];
