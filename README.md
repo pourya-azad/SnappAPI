@@ -62,13 +62,19 @@ php artisan key:generate
 ```bash
 php artisan migrate --seed
 ```
-5. اجرای Redis برای بهینه‌سازی سرعت:
+
+۵. داکیومنت هارو بساز کن:  
+```bash
+php artisan l5-swagger:generate
+```
+
+۶. اجرای Redis برای بهینه‌سازی سرعت:
 
 ```bash
 redis-server
 ```
 
-6. پروژه رو اجرا کن:  
+۷. پروژه رو اجرا کن:  
 ```bash
 php artisan serve
 php artisan reverb:start
