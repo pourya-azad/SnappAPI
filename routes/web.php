@@ -8,3 +8,6 @@ Route::redirect('/', 'api/documentation');
 
 
 
+Route::get('/test-pusher', function () {
+    return view('reverb');
+});
