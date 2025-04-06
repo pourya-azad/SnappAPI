@@ -8,7 +8,7 @@
 #### EER diagram پروژه:
 <img src="./eer Diagram.png" alt="EER diagram" style="width:50%">
 
-#### EER diagram پروژه:
+#### SQL tables پروژه:
 <img src="./drawSQL.png" alt="EER diagram" style="width:50%">
 
 SnappAPI یک سیستم درخواست تاکسی آنلاین است که با استفاده از Laravel 12 توسعه داده شده است. این پروژه امکان درخواست سفر، مدیریت وضعیت سفر و تعامل میان کاربران و رانندگان را فراهم می‌کند.
