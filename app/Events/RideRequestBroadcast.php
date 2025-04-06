@@ -4,6 +4,7 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -33,21 +34,28 @@ class RideRequestBroadcast implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     *
      */
-    public function broadcastOn(): Channel
+    public function broadcastOn()
     {
-        return new Channel('driver');
+        return collect($this->driverIds)
+            ->map(fn($driverId) => new PrivateChannel("drivers.{$driverId}"))
+            ->all();
     }
 
     public function broadcastWith()
     {
         return [
             'requestId' => $this->requestId,
-            'driverIds' => $this->driverIds,
+//            'driverIds' => $this->driverIds,
             'pickup_latitude' => $this->pickup_latitude,
             'pickup_longitude'=> $this->pickup_longitude,
             'trip_cost' => $this->tripCost
         ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'ride.request';
     }
 }
