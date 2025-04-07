@@ -25,4 +25,7 @@ Route::group(['prefix'=> 'drivers'], function () {
 });
 
 Route::post('ride-requests/store', [RideRequestController::class, 'store'])->middleware('auth:sanctum,user');
+Route::get('ride-requests/cancel', [RideRequestController::class, 'cancel'])->middleware('auth:user');
+
 Route::post('ride/complete', [RideController::class,'complete'])->middleware('auth:sanctum,driver');
+

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\RideRequestConfirmed;
 use App\Events\RideRequestCreated;
 use App\Http\Requests\AcceptRideRequestRequest;
+use App\Http\Requests\CancelRideRequestRequest;
 use App\Http\Requests\NewRideRequestRequest;
 use App\Interfaces\Controllers\RideRequestInterface;
 use App\Models\CurrentRide;
@@ -12,6 +13,7 @@ use App\Models\Driver;
 use App\Models\RideRequest;
 use App\Services\RidePreparationService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class RideRequestController extends Controller implements RideRequestInterface
 {
@@ -141,5 +143,22 @@ class RideRequestController extends Controller implements RideRequestInterface
             ], 500);
         }
 
+    }
+
+    public function cancel(Request $request): JsonResponse
+    {
+        $userId = $request->user('user')->id;
+
+        $pendingRideRequest = RideRequest::where('user_id', $userId)
+            ->where('isPending', true)
+            ->first();
+
+        if ($pendingRideRequest) {
+            $pendingRideRequest->delete();
+            return response()->json(status:204);
+        }
+        return response()->json([
+            "message" => "No Pending Request!",
+        ], 404);
     }
 }
