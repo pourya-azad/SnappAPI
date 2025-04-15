@@ -102,6 +102,15 @@ php artisan queue:work
 ### 👨‍💻 **توسعه‌دهنده**  
 [**Pouria Azad**](https://www.linkedin.com/in/pouria-azad)  
 
+# مشارکت‌کنندگان  
+
+
+### 👤 Amir Hossein Taghizadeh
+- **Role:** Developer  
+- **GitHub:** [Amyrosein](https://github.com/Amyrosein)  
+
+---
+
 
 📌 این پروژه به‌عنوان یک کلون از **Snapp / Uber** طراحی شده و قابلیت گسترش و شخصی‌سازی دارد.
 
