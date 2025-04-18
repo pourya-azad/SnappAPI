@@ -26,4 +26,9 @@ class RideRequest extends Model
     {
         return $this->belongsTo(CurrentRide::class,'id','request_id');
     }
+
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class);
+    }
 }

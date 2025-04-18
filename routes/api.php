@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RideRequestController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
@@ -28,4 +29,7 @@ Route::post('ride-requests/store', [RideRequestController::class, 'store'])->mid
 Route::get('ride-requests/cancel', [RideRequestController::class, 'cancel'])->middleware('auth:user');
 
 Route::post('ride/complete', [RideController::class,'complete'])->middleware('auth:sanctum,driver');
-
+Route::post('pay', [PaymentController::class, 'pay'])->middleware('auth:sanctum,user')
+    ->name('pay');
+Route::get('payment-verify/{invoice}', [PaymentController::class, 'verify'])->middleware('auth:sanctum,user')
+    ->name('payment-verify');
