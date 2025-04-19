@@ -2,18 +2,18 @@
 
 namespace App\Providers;
 
+use App\Interfaces\Repositories\DriverRepositoryInterface;
+use App\Interfaces\Repositories\RideRepositoryInterface;
+use App\Interfaces\Services\DistanceCalculatorServiceInterface;
+use App\Interfaces\Services\PaymentGatewayInterface;
 use App\Interfaces\Services\RideAcceptationServiceInterface;
 use App\Interfaces\Services\RideCompletionServiceInterface;
-use App\Interfaces\Services\DistanceCalculatorServiceInterface;
-use App\Interfaces\Repositories\RideRepositoryInterface;
-use App\Listeners\ProcessRiderAcceptRequest;
 use App\Repositories\DriverRepository;
-use App\Interfaces\Repositories\DriverRepositoryInterface;
 use App\Repositories\RideRepository;
 use App\Services\HaversineDistanceCalculatorService;
+use App\Services\Payments\ZarinpalGateway;
 use App\Services\RideAcceptationService;
 use App\Services\RideCompletionService;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         DistanceCalculatorServiceInterface::class => HaversineDistanceCalculatorService::class,
         RideCompletionServiceInterface::class     => RideCompletionService::class,
         RideAcceptationServiceInterface::class    => RideAcceptationService::class,
+        PaymentGatewayInterface::class            => ZarinpalGateway::class
     ];
 
     public function register()

@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'zarinpal' => [
+        'merchant_id' => env('ZP_MERCHANT_ID', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
+        'sandbox' => env('ZP_SANDBOX', false)
+    ]
+
 ];
