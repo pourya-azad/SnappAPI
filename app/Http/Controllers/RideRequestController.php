@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\RideRequestConfirmed;
 use App\Events\RideRequestCreated;
-use App\Http\Requests\AcceptRideRequestRequest;
 use App\Http\Requests\CancelRideRequestRequest;
 use App\Http\Requests\NewRideRequestRequest;
 use App\Interfaces\Controllers\RideRequestInterface;
 use App\Models\CurrentRide;
-use App\Models\Driver;
 use App\Models\RideRequest;
 use App\Services\RidePreparationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RideRequestController extends Controller implements RideRequestInterface
 {
@@ -121,7 +119,7 @@ class RideRequestController extends Controller implements RideRequestInterface
 
             $rideRequest = RideRequest::create($validatedData);
 
-            \Log::info('Ride request created successfully', [
+            Log::info('Ride request created successfully', [
                 'request_id' => $rideRequest->id,
                 'user_id'    => $request->user('user')->id ?? null,
                 'data'       => $request->validated(),
@@ -135,7 +133,7 @@ class RideRequestController extends Controller implements RideRequestInterface
                 'data' => $rideRequest->only(['id', 'user_id', 'cost', 'distance_km']),
             ], 201);
         } catch (\Exception $e) {
-            \Log::error('Failed to create ride request', [
+            Log::error('Failed to create ride request', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'data'  => $request->all(),

@@ -7,6 +7,7 @@ use App\Http\Requests\CompleteRideRequest;
 use App\Interfaces\Controllers\TripInterface;
 use App\Interfaces\Services\RideCompletionServiceInterface;
 use App\Services\RideCompletionService;
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\JsonResponse;
 
@@ -84,7 +85,7 @@ class RideController extends Controller implements TripInterface
                 ],
             ], 201);
         } catch (\Exception $e) {
-            \Log::error("An error occurred while completing the ride: ", [
+            Log::error("An error occurred while completing the ride: ", [
                 'error' => $e->getMessage(),
                 'trip_id' => $request->trip_id ?? null,
             ]);

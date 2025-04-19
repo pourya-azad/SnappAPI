@@ -9,8 +9,8 @@ use App\Interfaces\Controllers\DriverInterface;
 use App\Models\CurrentRide;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 
 class DriverController extends Controller implements DriverInterface
 {
@@ -78,7 +78,7 @@ class DriverController extends Controller implements DriverInterface
 
             Redis::setex($redisKey, 3600, json_encode($validatedData));
 
-            \Log::info('Driver location updated successfully: ', [$validatedData['driver_id']]);
+            Log::info('Driver location updated successfully: ', [$validatedData['driver_id']]);
 
             $responseData = [
                 'driver_id' => $validatedData['driver_id'],
@@ -92,7 +92,7 @@ class DriverController extends Controller implements DriverInterface
                 ->setStatusCode(200);
         }
         catch (\Exception $e) {
-            \Log::error("Failed to update driver location: ", [$e->getMessage()]);
+            Log::error("Failed to update driver location: ", [$e->getMessage()]);
             return response()->json([
                 'message' => 'An error occurred while updating driver location',
                 'error' => config('app.debug') ? $e->getMessage() : null,
