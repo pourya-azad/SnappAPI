@@ -156,7 +156,7 @@ class RideRequestController extends Controller implements RideRequestInterface
      *     security={{"Bearer": {}}},
      *     @OA\Response(
      *         response=204,
-     *         description="Pending ride request cancelled successfully.",
+     *         description="Pending ride request cancelled successfully."
      *     ),
      *     @OA\Response(
      *         response=404,

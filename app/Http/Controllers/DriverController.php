@@ -20,7 +20,9 @@ class DriverController extends Controller implements DriverInterface
      * @OA\Post(
      *     path="/api/drivers/location",
      *     summary="Update driver's location",
-     *     description="Stores the driver's location in Redis and returns the updated data. Driver ID is retrieved from authenticated user.",
+     *     description="Stores the authenticated driver's latest location in Redis with a TTL of 1 hour.
+     *                  The driver ID is retrieved from the authenticated token, so it should not be included in the request body.
+     *                  Returns the saved location data along with the driver's ID and a timestamp.",
      *     tags={"Drivers"},
      *     security={{"Bearer": {}}},
      *     @OA\RequestBody(
@@ -73,7 +75,7 @@ class DriverController extends Controller implements DriverInterface
             $locationData = $request->validated();
 
             $redisKey = "driver:location:{$validatedData['driver_id']}";
-            
+
             Redis::setex($redisKey, 3600, json_encode($validatedData));
 
             \Log::info('Driver location updated successfully: ', [$validatedData['driver_id']]);
@@ -83,7 +85,7 @@ class DriverController extends Controller implements DriverInterface
                 'location' => $locationData,
                 'updated_at' => now()->toIso8601String(),
             ];
-    
+
             return (new DriverLocationResource($responseData))
                 ->additional(['message' => 'Driver location updated successfully in Redis'])
                 ->response()
@@ -96,15 +98,18 @@ class DriverController extends Controller implements DriverInterface
                 'error' => config('app.debug') ? $e->getMessage() : null,
             ], 500);
         }
-        
+
     }
 
-    
+
     /**
      * @OA\Get(
      *     path="/api/drivers/status",
      *     summary="Get driver status",
-     *     description="Returns the current status of the driver based on their ride activity.",
+     *     description="Returns the current status of the driver based on their ongoing ride.
+     *                  If a ride is accepted but not yet started, it returns a message indicating the driver is heading to the user.
+     *                  If a ride has started, it informs the driver they are currently on a ride.
+     *                  If there is no active ride, it states the driver is idle.",
      *     tags={"Drivers"},
      *     security={{"Bearer": {}}},
      *     @OA\Response(

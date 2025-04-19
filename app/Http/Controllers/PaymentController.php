@@ -19,28 +19,30 @@ class PaymentController extends Controller
      * @OA\Post(
      *     path="/api/pay",
      *     summary="Pay an Invoice",
-     *     description="Pay an invoice for a Ride by Ride Request Id",
+     *     description="Initiates payment for a ride invoice using the provided Ride Request ID.
+     *                  The invoice must belong to the authenticated user and must not be already paid.
+     *                  If a matching unpaid invoice is found, a payment URL is generated and returned.",
      *     tags={"Payment"},
      *     security={{"Bearer": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *             required={"ride_request_id"},
-     *             @OA\Property(property="ride_request_id", type="integer", example=1, description="The ID of the Ride Request to Pay")
+     *             @OA\Property(property="ride_request_id", type="integer", example=1, description="The ID of the Ride Request to pay for")
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Ride Payment Url generated Successfully",
+     *         description="Ride payment URL generated successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(property="payment_url", type="string", example="https://www..."),
+     *             @OA\Property(property="payment_url", type="string", example="https://www.example.com/pay/xyz")
      *         )
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad request due to invalid data",
+     *         description="Bad request due to payment gateway error or invalid input",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="error returned by Payment Gateway")
+     *             @OA\Property(property="message", type="string", example="Error returned by Payment Gateway")
      *         )
      *     ),
      *     @OA\Response(
@@ -52,9 +54,9 @@ class PaymentController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="ride request not found",
+     *         description="No unpaid ride request found for this user and ride ID",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="No unpaid ride request!"),
+     *             @OA\Property(property="message", type="string", example="No unpaid ride request!")
      *         )
      *     )
      * )
@@ -92,11 +94,20 @@ class PaymentController extends Controller
      * Verify a payment for a ride request.
      *
      * @OA\Get(
-     *     path="/api/payment-verify",
+     *     path="/api/payment-verify/{invoice}",
      *     summary="Verify Payment",
-     *     description="Verify a payment for a ride request using Authority and Status returned from the payment gateway.",
+     *     description="Verifies a payment for a ride request using Authority and Status parameters returned from the payment gateway.
+     *                  The invoice is identified by its ID in the path.",
      *     tags={"Payment"},
      *     security={{"Bearer": {}}},
+     *     @OA\Parameter(
+     *         name="invoice",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="The ID of the invoice to verify",
+     *         example=42
+     *     ),
      *     @OA\Parameter(
      *         name="Authority",
      *         in="query",
@@ -117,7 +128,7 @@ class PaymentController extends Controller
      *         response=200,
      *         description="Payment verification successful",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Transaction Completed"),
+     *             @OA\Property(property="message", type="string", example="Transaction Completed")
      *         )
      *     ),
      *     @OA\Response(
@@ -128,12 +139,12 @@ class PaymentController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *          response=401,
-     *          description="User not authenticated",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="Unauthorized. Please log in.")
-     *          )
-     *      ),
+     *         response=401,
+     *         description="User not authenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized. Please log in.")
+     *         )
+     *     )
      * )
      */
     public function verify(Request $request, Invoice $invoice)

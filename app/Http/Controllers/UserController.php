@@ -24,16 +24,20 @@ class UserController extends Controller implements UserControllerInterface
      *         @OA\JsonContent(
      *             oneOf={
      *                 @OA\Schema(
-     *                     @OA\Property(property="message", type="string", example="Your request is pending, please wait!")
+     *                     @OA\Property(property="message", type="string", example="Your request is pending, please wait!"),
+     *                     @OA\Property(property="status_code", type="integer", example=1, description="Status code indicating the user's current state")
      *                 ),
      *                 @OA\Schema(
-     *                     @OA\Property(property="message", type="string", example="Your request has been accepted, and the driver is on the way. Please wait!")
+     *                     @OA\Property(property="message", type="string", example="Your request has been accepted, and the driver is on the way. Please wait!"),
+     *                     @OA\Property(property="status_code", type="integer", example=2, description="Status code indicating the ride is on the way")
      *                 ),
      *                 @OA\Schema(
-     *                     @OA\Property(property="message", type="string", example="You are currently on a ride, please end it!")
+     *                     @OA\Property(property="message", type="string", example="You are currently on a ride, please end it!"),
+     *                     @OA\Property(property="status_code", type="integer", example=3, description="Status code indicating the user is on a ride")
      *                 ),
      *                 @OA\Schema(
-     *                     @OA\Property(property="message", type="string", example="You are currently idle.")
+     *                     @OA\Property(property="message", type="string", example="You are currently idle."),
+     *                     @OA\Property(property="status_code", type="integer", example=4, description="Status code indicating the user is idle")
      *                 )
      *             }
      *         )

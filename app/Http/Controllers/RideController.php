@@ -26,7 +26,7 @@ class RideController extends Controller implements TripInterface
      * @OA\Post(
      *     path="/api/ride/complete",
      *     summary="Complete a ride",
-     *     description="Completes a ride based on the provided trip ID and returns the total time taken.",
+     *     description="Marks a ride as complete using the provided trip ID and returns the total time taken in HH:MM:SS format.",
      *     tags={"Ride"},
      *     security={{"Bearer": {}}},
      *     @OA\RequestBody(
@@ -37,20 +37,20 @@ class RideController extends Controller implements TripInterface
      *         )
      *     ),
      *     @OA\Response(
-     *         response=201,
+     *         response=200,
      *         description="Ride completed successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Ride completed successfully"),
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 @OA\Property(property="total_time", type="string", example="00:45:30", description="Total time of the ride in HH:MM:SS format")
+     *                 @OA\Property(property="total_time", type="string", example="00:45:30", description="Total ride duration in HH:MM:SS format")
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad request due to invalid or already completed trip",
+     *         description="Invalid or already completed trip",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Invalid trip ID or ride already completed")
      *         )
