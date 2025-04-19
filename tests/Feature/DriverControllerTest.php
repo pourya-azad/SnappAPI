@@ -114,7 +114,7 @@ class DriverControllerTest extends TestCase
         Redis::shouldReceive('setex')
             ->once()
             ->with("driver:location:{$driver->id}", 3600, json_encode($validatedData))
-            ->andThrow(new \RedisException('Redis connection failed'));
+            ->andThrow(new \Exception('Redis connection failed'));
 
         \Log::shouldReceive('error')
             ->once()
