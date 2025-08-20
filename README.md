@@ -116,3 +116,8 @@ php artisan queue:work
 
 🚀 **اگر سوالی داشتی یا می‌خوای پروژه رو بهبود بدی، مشارکت در گیت‌هاب آزاد است!** 😎
 </div>
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
+
