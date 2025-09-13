@@ -2,9 +2,14 @@
 
 #### Overall System Diagram:
 
+<img src="./Snap Clone.png" alt="SnappAPI" style="width:50%">
+
 #### Project EER Diagram:
+<img src="./eer Diagram.png" alt="EER diagram" style="width:50%">
 
 #### Project SQL Tables:
+<img src="./drawSQL.png" alt="EER diagram" style="width:50%">
+
 
 SnappAPI is an online taxi request system developed using Laravel 12. This project enables users to request rides, manage trip statuses, and facilitates interaction between passengers and drivers.
 
